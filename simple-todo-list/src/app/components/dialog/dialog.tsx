@@ -1,5 +1,5 @@
-"use client";
-
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -10,14 +10,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
 
-type Props = {};
+type Props = {
+  getTasks: () => void;
+};
 
-const TodoDialog = (props: Props) => {
+const TodoDialog = ({ getTasks }: Props) => {
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
 
@@ -34,6 +34,8 @@ const TodoDialog = (props: Props) => {
 
     setTaskName("");
     setTaskDescription("");
+
+    getTasks();
   };
 
   function getRandomInt(min: number, max: number): number {
@@ -56,16 +58,18 @@ const TodoDialog = (props: Props) => {
           <div className="grid flex-1 gap-2">
             <Label htmlFor="task">Tarefa</Label>
             <Input
-              type="task"
+              type="text"
               id="task"
               placeholder="Tarefa"
+              value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
             />
             <Label htmlFor="description">Descrição</Label>
             <Input
-              type="description"
+              type="text"
               id="description"
               placeholder="Descrição"
+              value={taskDescription}
               onChange={(e) => setTaskDescription(e.target.value)}
             />
           </div>

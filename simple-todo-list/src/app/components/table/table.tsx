@@ -1,5 +1,6 @@
-"use client";
-
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { FaRegTrashAlt } from "react-icons/fa";
 import {
   Table,
   TableBody,
@@ -9,10 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
-
-import { useEffect, useState } from "react";
 
 type Task = {
   id: number;
@@ -20,31 +17,17 @@ type Task = {
   description: string;
 };
 
-const TodoTable = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+type Props = {
+  tasks: Task[];
+  getTasks: () => Task[];
+};
 
-  const getTasks = () => {
-    const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-    setTasks(storedTasks);
-  };
-
+const TodoTable: React.FC<Props> = ({ tasks, getTasks }) => {
   const deleteTask = (id: number) => {
-    const storedItems = JSON.parse(localStorage.getItem("tasks") || "[]");
-
-    const task = storedItems.find((task: Task) => task.id === id);
-
-    if (task !== -1) {
-      storedItems.splice(task, 1);
-
-      localStorage.setItem("tasks", JSON.stringify(storedItems));
-    }
-
-    return task;
-  };
-
-  useEffect(() => {
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
     getTasks();
-  }, [tasks]);
+  };
 
   return (
     <Table>
@@ -59,10 +42,8 @@ const TodoTable = () => {
       </TableHeader>
       <TableBody>
         {tasks.map((task) => (
-          <TableRow>
-            <TableCell className="font-medium" key={task.id}>
-              ID{task.id}
-            </TableCell>
+          <TableRow key={task.id}>
+            <TableCell className="font-medium">ID{task.id}</TableCell>
             <TableCell>{task.name}</TableCell>
             <TableCell>{task.description}</TableCell>
             <TableCell className="flex justify-end">
