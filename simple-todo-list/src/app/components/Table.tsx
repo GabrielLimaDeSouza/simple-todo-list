@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableBody,
@@ -7,10 +9,43 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
 
-type Props = {};
+import { useEffect, useState } from "react";
 
-const TodoTable = (props: Props) => {
+type Task = {
+  id: number;
+  name: string;
+  description: string;
+};
+
+const TodoTable = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  const getTasks = () => {
+    const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+    setTasks(storedTasks);
+  };
+
+  const deleteTask = (id: number) => {
+    const storedItems = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    const task = storedItems.find((task: Task) => task.id === id);
+
+    if (task !== -1) {
+      storedItems.splice(task, 1);
+
+      localStorage.setItem("tasks", JSON.stringify(storedItems));
+    }
+
+    return task;
+  };
+
+  useEffect(() => {
+    getTasks();
+  }, [tasks]);
+
   return (
     <Table>
       <TableCaption>Uma lista das suas recentes tarefas</TableCaption>
@@ -23,12 +58,20 @@ const TodoTable = (props: Props) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell className="font-medium">INV001</TableCell>
-          <TableCell>Paid</TableCell>
-          <TableCell>Credit Card</TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
-        </TableRow>
+        {tasks.map((task) => (
+          <TableRow>
+            <TableCell className="font-medium" key={task.id}>
+              ID{task.id}
+            </TableCell>
+            <TableCell>{task.name}</TableCell>
+            <TableCell>{task.description}</TableCell>
+            <TableCell className="flex justify-end">
+              <Button variant="outline" onClick={() => deleteTask(task.id)}>
+                <FaRegTrashAlt />
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

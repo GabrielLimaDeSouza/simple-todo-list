@@ -1,5 +1,7 @@
-import TodoDialog from "./components/Dialog";
-import TodoTable from "./components/Table";
+"use client";
+
+import TodoDialog from "./components/dialog";
+import TodoTable from "./components/table";
 
 export default function Home() {
   return (

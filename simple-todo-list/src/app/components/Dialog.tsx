@@ -21,9 +21,28 @@ const TodoDialog = (props: Props) => {
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
 
+  const saveTask = () => {
+    const existingTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    existingTasks.push({
+      id: getRandomInt(9999, 999999),
+      name: taskName,
+      description: taskDescription,
+    });
+
+    localStorage.setItem("tasks", JSON.stringify(existingTasks));
+
+    setTaskName("");
+    setTaskDescription("");
+  };
+
+  function getRandomInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>Adicionar Tarefa</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
@@ -56,7 +75,9 @@ const TodoDialog = (props: Props) => {
             <Button type="button" variant="secondary">
               Fechar
             </Button>
-            <Button type="button">Enviar</Button>
+            <Button type="button" onClick={saveTask}>
+              Enviar
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
